@@ -106,5 +106,5 @@ if train_data_file is not None and test_data_file is not None and RUL_data_file 
 seq_length = 50
 
 # Split the train data into X and y
-X_train, y_train = create_X_y(train_data, seq_length)
+#X_train, y_train = create_X_y(train_data, seq_length)
 
