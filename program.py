@@ -43,7 +43,6 @@ def preprocess_data(train_data, test_data, RUL_data):
 
 
 def create_X_y(train_data, seq_length):
-    train_data = train_data.drop("unit_id", axis=1)
     
     X_train, y_train = [], []
 
@@ -55,7 +54,7 @@ def create_X_y(train_data, seq_length):
         for i in range(len(unit_data) - seq_length):
             X_train.append(unit_data.iloc[i:i + seq_length, 1:].values)
             y_train.append(unit_data.iloc[i + seq_length, -1])
-    train_data = train_data.drop("unit_id", axis=1)
+  
     return np.array(X_train), np.array(y_train)
 
 
