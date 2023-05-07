@@ -43,18 +43,24 @@ def preprocess_data(train_data, test_data, RUL_data):
 
 
 def create_X_y(train_data, seq_length):
-    
     X_train, y_train = [], []
 
     unit_ids = train_data["unit_id"].unique()
-    
+    print(f"unit_ids: {unit_ids}")  # Debugging print statement
+
     for unit_id in unit_ids:
         unit_data = train_data[train_data["unit_id"] == unit_id]
         unit_data = unit_data.drop("unit_id", axis=1)
+        print(f"unit_data: {unit_data}")  # Debugging print statement
+        print(f"len(unit_data): {len(unit_data)}")  # Debugging print statement
+        print(f"seq_length: {seq_length}")  # Debugging print statement
+
         for i in range(len(unit_data) - seq_length):
             X_train.append(unit_data.iloc[i:i + seq_length, 1:].values)
             y_train.append(unit_data.iloc[i + seq_length, -1])
-  
+            print(f"X_train: {X_train}")  # Debugging print statement
+            print(f"y_train: {y_train}")  # Debugging print statement
+
     return np.array(X_train), np.array(y_train)
 
 
