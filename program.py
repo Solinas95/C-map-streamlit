@@ -26,7 +26,9 @@ def preprocess_data(train_data, test_data, RUL_data):
 
     # Remove the header from the RUL data and rename the column
     RUL_data = RUL_data.drop(0, axis=0)
-    RUL_data.rename(columns={0: "RUL"}, inplace=True)
+    RUL_data['RUL'] = RUL_data[0]
+    RUL_data = RUL_data.drop(0, axis=1)
+
 
 
     return train_data, test_data, RUL_data
