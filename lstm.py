@@ -33,16 +33,20 @@ if test_data_file is not None:
 
 def preprocess_data(train_data, seq_length):
     train_data = train_data.drop("unit_ID", axis=1)
-    scaler = MinMaxScaler()
-    train_data_scaled = scaler.fit_transform(train_data)
+    scaler_x = MinMaxScaler()
+    scaler_y = MinMaxScaler()
+    
+    train_data_x = scaler_x.fit_transform(train_data.drop("RUL", axis=1))
+    train_data_y = scaler_y.fit_transform(train_data[["RUL"]])
 
     X_train, y_train = [], []
 
-    for i in range(seq_length, len(train_data_scaled)):
-        X_train.append(train_data_scaled[i-seq_length:i, :-1])
-        y_train.append(train_data_scaled[i, -1])
+    for i in range(seq_length, len(train_data_x)):
+        X_train.append(train_data_x[i-seq_length:i])
+        y_train.append(train_data_y[i])
 
-    return np.array(X_train), np.array(y_train), scaler
+    return np.array(X_train), np.array(y_train), scaler_x, scaler_y
+
 
 def build_lstm_model(input_shape):
     model = Sequential()
@@ -66,19 +70,20 @@ def evaluate_lstm_model(model, X_train, y_train):
     train_loss = model.evaluate(X_train, y_train, verbose=1)
     return train_loss
 
-def predict_lstm(model, test_data, scaler, seq_length):
+def predict_lstm(model, test_data, scaler_x, scaler_y, seq_length):
     test_data = test_data.drop("unit_ID", axis=1)
-    test_data_scaled = scaler.transform(test_data)
+    test_data_scaled = scaler_x.transform(test_data)
 
     X_test = []
     for i in range(seq_length, len(test_data_scaled)):
-        X_test.append(test_data_scaled[i-seq_length:i, :])
+        X_test.append(test_data_scaled[i-seq_length:i])
 
     X_test = np.array(X_test)
     y_pred = model.predict(X_test)
-    y_pred_inverse = scaler.inverse_transform(np.concatenate((X_test[:, -1, :], y_pred), axis=1))[:, -1]
+    y_pred_inverse = scaler_y.inverse_transform(y_pred)
 
     return y_pred_inverse
+
 
 def plot_predicted_rul(unit_id, y_pred, test_data):
     unit_ids = test_data["unit_id"].unique()
@@ -102,21 +107,22 @@ seq_length = 50
 if train_data_file is not None and test_data_file is not None:
    
     # Preprocess the data
-    X_train, y_train, scaler = preprocess_data(train_data, seq_length)
+    X_train, y_train, scaler_x, scaler_y = preprocess_data(train_data, seq_length)
 
     # Build and train the LSTM model
     input_shape = (X_train.shape[1], X_train.shape[2])
     lstm_model = build_lstm_model(input_shape)
-    train_lstm_model(lstm_model, X_train, y_train, epochs=2, batch_size=64)
+    train_lstm_model(lstm_model, X_train, y_train, epochs=100, batch_size=64)
 
     # Evaluate the model
     train_loss = evaluate_lstm_model(lstm_model, X_train, y_train)
     st.write(f"Train Loss (MSE): {train_loss:.4f}")
 
     # Make predictions on the test data
-    y_pred = predict_lstm(lstm_model, test_data, scaler, seq_length)
-    st.write("Predicted RUL values:")
-    st.write(y_pred)
+    y_pred = predict_lstm(lstm_model, test_data, scaler_x, scaler_y, seq_length)
+    #st.write("Predicted RUL values:")
+    #st.write(y_pred)
+
 
     # Get unique unit_ids
     unique_unit_ids = test_data["unit_ID"].unique()
