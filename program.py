@@ -87,14 +87,28 @@ def create_X_y(data, seq_length):
 
     return X,y
 
+def calculate_std(X, unit_id, seq_length):
+    unit_X = X[unit_id]
+    std_df = pd.DataFrame(unit_X).std(axis=0)
+    return std_df
+
 # Add this line after your existing file uploader widgets
 create_sequences_button = st.button("Create Sequences and Labels")
 # Add the slider for sequence length selection after the file uploader widgets
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
-# Check if the button is clicked and all the required data files are uploaded
 if create_sequences_button and train_data_file is not None:
     X, y = create_X_y(train_data, seq_length)
     st.write("Sequences and labels are created.")
-    # Display or use X and y as needed
+    
+    # Add a selectbox for the user to choose the unit_id
+    unique_unit_ids = train_data["unit_id"].unique()
+    selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
 
+    # Add a button to show the standard deviation for the selected unit_id
+    show_std_button = st.button("Show Standard Deviation")
+    
+    if show_std_button:
+        std_df = calculate_std(X, selected_unit_id, seq_length)
+        st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
+        st.write(std_df)
