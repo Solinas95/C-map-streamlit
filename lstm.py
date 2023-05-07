@@ -32,7 +32,7 @@ if test_data_file is not None:
     st.write(test_data.head())
 
 def preprocess_data(train_data, seq_length):
-    train_data = train_data.drop("unit_",ID axis=1)
+    train_data = train_data.drop("unit_ID", axis=1)
     scaler = MinMaxScaler()
     train_data_scaled = scaler.fit_transform(train_data)
 
