@@ -32,7 +32,7 @@ if test_data_file is not None:
     st.write(test_data.head())
 
 def preprocess_data(train_data, seq_length):
-    train_data = train_data.drop("unit_id", axis=1)
+    train_data = train_data.drop("unit_",ID axis=1)
     scaler = MinMaxScaler()
     train_data_scaled = scaler.fit_transform(train_data)
 
@@ -112,7 +112,7 @@ if train_data_file is not None and test_data_file is not None:
     st.write(y_pred)
 
     # Get unique unit_ids
-    unique_unit_ids = test_data["unit_id"].unique()
+    unique_unit_ids = test_data["unit_ID"].unique()
     selected_unit_id = st.selectbox("Select a Unit ID", unique_unit_ids)
 
     # Plot the predicted RUL for the selected unit_id
