@@ -53,7 +53,14 @@ def build_lstm_model(input_shape):
     return model
 
 def train_lstm_model(model, X_train, y_train, epochs, batch_size):
-    model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1)
+    progress_bar = st.progress(0)
+    for epoch in range(epochs):
+        model.fit(X_train, y_train, epochs=1, batch_size=batch_size, verbose=0)
+        progress = (epoch + 1) / epochs
+        progress_bar.progress(progress)
+        st.write(f"Epoch {epoch + 1}/{epochs} completed")
+    progress_bar.empty()
+
 
 def evaluate_lstm_model(model, X_train, y_train):
     train_loss = model.evaluate(X_train, y_train, verbose=1)
