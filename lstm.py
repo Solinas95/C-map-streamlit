@@ -107,7 +107,7 @@ if train_data_file is not None and test_data_file is not None:
     # Build and train the LSTM model
     input_shape = (X_train.shape[1], X_train.shape[2])
     lstm_model = build_lstm_model(input_shape)
-    train_lstm_model(lstm_model, X_train, y_train, epochs=100, batch_size=64)
+    train_lstm_model(lstm_model, X_train, y_train, epochs=10, batch_size=64)
 
     # Evaluate the model
     train_loss = evaluate_lstm_model(lstm_model, X_train, y_train)
