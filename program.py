@@ -50,19 +50,19 @@ train_data_file = st.file_uploader("Upload Train Data (txt)", type="txt")
 if train_data_file is not None:
     train_data = load_data(train_data_file)
     st.write("Train Data:")
-    st.write(train_data.head())
+    st.write(train_data.shape)
 
 test_data_file = st.file_uploader("Upload Test Data (txt)", type="txt")
 if test_data_file is not None:
     test_data = load_data(test_data_file)
     st.write("Test Data:")
-    st.write(test_data.head())
+    st.write(test_data.shape)
 
 RUL_data_file = st.file_uploader("Upload RUL Data (txt)", type="txt")
 if RUL_data_file is not None:
     RUL_data = load_data(RUL_data_file)
     st.write("RUL Data:")
-    st.write(RUL_data.head())
+    st.write(RUL_data.shape)
 
 if train_data_file is not None and test_data_file is not None and RUL_data_file is not None:
     train_data, test_data, RUL_data = preprocess_data(train_data, test_data, RUL_data)
@@ -87,6 +87,6 @@ def create_X_y(data, seq_length):
             X.append(unit_data.iloc[i : i + seq_length].drop('RUL', axis=1).values)
             y.append(unit_data.iloc[i + seq_length]['RUL'])
 
-    return np.array(X), np.array(y)
+    return X,y
 
 X,y=create_X_y(train_data, seq_length)
