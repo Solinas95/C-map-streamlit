@@ -31,7 +31,7 @@ def preprocess_data(train_data, test_data, RUL_data):
     RUL_data = RUL_data.drop(0, axis=0)
     RUL_data['RUL'] = RUL_data[0]
     RUL_data = RUL_data.drop(0, axis=1)
-
+    RUL_data = RUL_data.drop(0, axis=1)
     # Calculate RUL for train_data
     rul_train = pd.DataFrame(train_data.groupby("unit_id")["cycle"].max()).reset_index()
     rul_train.columns = ["unit_id", "max_cycles"]
@@ -73,8 +73,6 @@ if train_data_file is not None and test_data_file is not None and RUL_data_file 
     st.write("Preprocessed RUL Data:")
     st.write(RUL_data.head())
     
-# Set the sequence length for the LSTM
-seq_length = 50
 
 
 def create_X_y(data, seq_length):
@@ -91,6 +89,8 @@ def create_X_y(data, seq_length):
 
 # Add this line after your existing file uploader widgets
 create_sequences_button = st.button("Create Sequences and Labels")
+# Add the slider for sequence length selection after the file uploader widgets
+seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
 # Check if the button is clicked and all the required data files are uploaded
 if create_sequences_button and train_data_file is not None:
