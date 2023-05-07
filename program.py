@@ -24,11 +24,16 @@ def preprocess_data(train_data, test_data, RUL_data):
     train_data.columns = column_names
     test_data.columns = column_names
 
-    # Remove the header from the RUL data and rename the column
-    RUL_data = RUL_data.drop(0, axis=0)
-    RUL_data['RUL'] = RUL_data[0]
-    RUL_data = RUL_data.drop(0, axis=1)
+    # Reset the index of RUL_data to make sure it has a clean index
+    RUL_data = RUL_data.reset_index(drop=True)
 
+    # Check if RUL_data has the expected shape before setting column name
+    if RUL_data.shape[1] != 1:
+        raise ValueError("RUL_data does not have the expected shape.")
+
+    RUL_data.columns = ["RUL"]
+
+    return train_data, test_data, RUL_data
 
 
     return train_data, test_data, RUL_data
