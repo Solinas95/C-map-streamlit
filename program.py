@@ -76,3 +76,17 @@ if train_data_file is not None and test_data_file is not None and RUL_data_file 
 # Set the sequence length for the LSTM
 seq_length = 50
 
+
+def create_X_y(data, seq_length):
+    X = []
+    y = []
+
+    for unit_id in data['unit_id'].unique():
+        unit_data = data[data['unit_id'] == unit_id]
+        for i in range(len(unit_data) - seq_length):
+            X.append(unit_data.iloc[i : i + seq_length].drop('RUL', axis=1).values)
+            y.append(unit_data.iloc[i + seq_length]['RUL'])
+
+    return np.array(X), np.array(y)
+
+X,y=create_X_y(train_data, seq_length)
