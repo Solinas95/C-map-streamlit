@@ -31,8 +31,10 @@ if test_data_file is not None:
     st.write("Test Data:")
     st.write(test_data.head())
 
-def preprocess_data(train_data, seq_length):
+def preprocess_data(train_data, test_data, seq_length):
     train_data = train_data.drop("unit_ID", axis=1)
+    test_data = test_data.drop("unit_ID", axis=1)
+    
     scaler_x = MinMaxScaler()
     scaler_y = MinMaxScaler()
     
@@ -46,6 +48,7 @@ def preprocess_data(train_data, seq_length):
         y_train.append(train_data_y[i])
 
     return np.array(X_train), np.array(y_train), scaler_x, scaler_y
+
 
 
 def build_lstm_model(input_shape):
@@ -71,7 +74,6 @@ def evaluate_lstm_model(model, X_train, y_train):
     return train_loss
 
 def predict_lstm(model, test_data, scaler_x, scaler_y, seq_length):
-    test_data = test_data.drop("unit_ID", axis=1)
     test_data_scaled = scaler_x.transform(test_data)
 
     X_test = []
@@ -83,6 +85,7 @@ def predict_lstm(model, test_data, scaler_x, scaler_y, seq_length):
     y_pred_inverse = scaler_y.inverse_transform(y_pred)
 
     return y_pred_inverse
+
 
 
 def plot_predicted_rul(unit_id, y_pred, test_data):
@@ -107,12 +110,12 @@ seq_length = 50
 if train_data_file is not None and test_data_file is not None:
    
     # Preprocess the data
-    X_train, y_train, scaler_x, scaler_y = preprocess_data(train_data, seq_length)
+    X_train, y_train, scaler_x, scaler_y = preprocess_data(train_data, test_data, seq_length)
 
     # Build and train the LSTM model
     input_shape = (X_train.shape[1], X_train.shape[2])
     lstm_model = build_lstm_model(input_shape)
-    train_lstm_model(lstm_model, X_train, y_train, epochs=2, batch_size=64)
+    train_lstm_model(lstm_model, X_train, y_train, epochs=100, batch_size=64)
 
     # Evaluate the model
     train_loss = evaluate_lstm_model(lstm_model, X_train, y_train)
@@ -120,8 +123,9 @@ if train_data_file is not None and test_data_file is not None:
 
     # Make predictions on the test data
     y_pred = predict_lstm(lstm_model, test_data, scaler_x, scaler_y, seq_length)
-    #st.write("Predicted RUL values:")
-    #st.write(y_pred)
+    st.write("Predicted RUL values:")
+    st.write(y_pred)
+
 
 
     # Get unique unit_ids
