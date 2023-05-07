@@ -89,4 +89,12 @@ def create_X_y(data, seq_length):
 
     return X,y
 
-X,y=create_X_y(train_data, seq_length)
+# Add this line after your existing file uploader widgets
+create_sequences_button = st.button("Create Sequences and Labels")
+
+# Check if the button is clicked and all the required data files are uploaded
+if create_sequences_button and train_data_file is not None:
+    X, y = create_X_y(train_data, seq_length)
+    st.write("Sequences and labels are created.")
+    # Display or use X and y as needed
+
