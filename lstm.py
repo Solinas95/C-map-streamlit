@@ -94,4 +94,27 @@ seq_length = 50
 
 if train_data_file is not None and test_data_file is not None:
    
+    # Preprocess the data
+    X_train, y_train, scaler = preprocess_data(train_data, seq_length)
+
+    # Build and train the LSTM model
+    input_shape = (X_train.shape[1], X_train.shape[2])
+    lstm_model = build_lstm_model(input_shape)
+    train_lstm_model(lstm_model, X_train, y_train, epochs=100, batch_size=64)
+
+    # Evaluate the model
+    train_loss = evaluate_lstm_model(lstm_model, X_train, y_train)
+    st.write(f"Train Loss (MSE): {train_loss:.4f}")
+
+    # Make predictions on the test data
+    y_pred = predict_lstm(lstm_model, test_data, scaler, seq_length)
+    st.write("Predicted RUL values:")
+    st.write(y_pred)
+
+    # Get unique unit_ids
+    unique_unit_ids = test_data["unit_id"].unique()
+    selected_unit_id = st.selectbox("Select a Unit ID", unique_unit_ids)
+
+    # Plot the predicted RUL for the selected unit_id
+    plot_predicted_rul(selected_unit_id, y_pred, test_data)
 
