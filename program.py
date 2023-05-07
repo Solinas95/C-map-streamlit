@@ -108,7 +108,16 @@ if create_sequences_button and train_data_file is not None:
     # Add a button to show the standard deviation for the selected unit_id
     show_std_button = st.button("Show Standard Deviation")
     
-    if show_std_button:
-        std_df = calculate_std(X, selected_unit_id, seq_length)
-        st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
-        st.write(std_df)
+if show_std_button:
+    std_df = calculate_std(X, selected_unit_id, seq_length)
+    st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
+
+    # Create a bar plot using matplotlib
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(std_df.index, std_df.values)
+    ax.set_xlabel('Column Index')
+    ax.set_ylabel('Standard Deviation')
+    ax.set_title(f'Standard Deviation for Each Column in Sequences of Unit ID {selected_unit_id}')
+
+    # Display the bar plot in Streamlit
+    st.pyplot(fig)
