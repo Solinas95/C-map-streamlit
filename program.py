@@ -31,7 +31,7 @@ def preprocess_data(train_data, test_data, RUL_data):
     RUL_data = RUL_data.drop(0, axis=0)
     RUL_data['RUL'] = RUL_data[0]
     #RUL_data = RUL_data.drop(0, axis=1)
-    RUL_data = RUL_data.drop("0", axis=1)
+    RUL_data = RUL_data.dropna(axis=1)
     # Calculate RUL for train_data
     rul_train = pd.DataFrame(train_data.groupby("unit_id")["cycle"].max()).reset_index()
     rul_train.columns = ["unit_id", "max_cycles"]
