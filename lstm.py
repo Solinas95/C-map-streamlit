@@ -67,7 +67,7 @@ def evaluate_lstm_model(model, X_train, y_train):
     return train_loss
 
 def predict_lstm(model, test_data, scaler, seq_length):
-    test_data = test_data.drop("unit_id", axis=1)
+    test_data = test_data.drop("unit_ID", axis=1)
     test_data_scaled = scaler.transform(test_data)
 
     X_test = []
