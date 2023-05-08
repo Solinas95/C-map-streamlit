@@ -11,7 +11,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, BatchNormalization, LayerNormalization
 from tensorflow.keras.regularizers import L1, L2, L1L2
 from tensorflow.keras.callbacks import EarlyStopping
-from sessionstate import SessionState
 
 
 st.title("CMAPSS Data Preprocessing")
