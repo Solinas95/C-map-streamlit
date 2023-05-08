@@ -74,23 +74,28 @@ if train_data_file is not None and test_data_file is not None and RUL_data_file 
     st.write(RUL_data.head())
     
 
-
 def create_X_y(data, seq_length):
     X = []
     y = []
+    unit_id_to_indices = {}
 
     for unit_id in data['unit_id'].unique():
         unit_data = data[data['unit_id'] == unit_id]
+        unit_indices = []
         for i in range(len(unit_data) - seq_length):
             X.append(unit_data.iloc[i : i + seq_length].drop('RUL', axis=1).values)
             y.append(unit_data.iloc[i + seq_length]['RUL'])
+            unit_indices.append(len(X) - 1)
+        unit_id_to_indices[unit_id] = unit_indices
 
-    return X,y
+    return X, y, unit_id_to_indices
 
-def calculate_std(X, unit_id, seq_length):
-    unit_X = X[unit_id]
-    std_df = pd.DataFrame(unit_X).std(axis=0)
+def calculate_std(X, unit_id, seq_length, unit_id_to_indices):
+    unit_indices = unit_id_to_indices[unit_id]
+    unit_X = [X[i] for i in unit_indices]
+    std_df = pd.DataFrame(np.vstack(unit_X)).std(axis=0)
     return std_df
+
 
 # Add this line after your existing file uploader widgets
 create_sequences_button = st.button("Create Sequences and Labels")
@@ -98,7 +103,7 @@ create_sequences_button = st.button("Create Sequences and Labels")
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
 if create_sequences_button and train_data_file is not None:
-    X, y = create_X_y(train_data, seq_length)
+    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
     st.write("Sequences and labels are created.")
     
     # Add a selectbox for the user to choose the unit_id
@@ -108,7 +113,7 @@ if create_sequences_button and train_data_file is not None:
     # Add a button to show the standard deviation for the selected unit_id
     show_std_button = st.button("Show Standard Deviation")
     
-    if show_std_button:
+     if show_std_button:
         std_df = calculate_std(X, selected_unit_id, seq_length)
         st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
 
