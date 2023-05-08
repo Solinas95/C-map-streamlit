@@ -187,7 +187,7 @@ display_summary = st.button("build_model")
     
 if display_summary is not None:
 
-    model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+    model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
     st.write("model bult successfully!")
 
