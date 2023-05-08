@@ -217,10 +217,6 @@ if train_model_button:
     ax.set_xlabel('Real RUL')
     ax.set_ylabel('Predicted RUL')
     st.pyplot(fig)
-This function takes in the model, training and validation data, and the number of epochs and batch size as inputs. It uses early stopping to prevent overfitting. The train_model_button triggers the model training and displays the final training and validation MAE, as well as a scatter plot comparing the real and predicted RUL values.
-
-Please note that you'll need to have a trained model before you can use this function. The model is created when the "set_model" button is clicked in your code.
-
 
 
 
