@@ -141,4 +141,3 @@ if create_sequences_button and train_data_file is not None:
 
       
 
-selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
