@@ -165,10 +165,10 @@ if create_sequences_button and train_data_file is not None:
     
     
     
-        # Build and display the model
-    build_model_button = st.button("set_model")
+# Build and display the model
+build_model_button = st.button("set_model")
     
-    if build_model_button is not None:
+if build_model_button is not None:
         # Create train and validation arrays
         # Model parameters
         num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
@@ -182,14 +182,13 @@ if create_sequences_button and train_data_file is not None:
 
         input_shape = (X_train.shape[0], X_train.shape[1])
     
-        # Build and display the model
-        display_summary = st.button("build_model")
+# Build and display the model
+display_summary = st.button("build_model")
     
-        if display_summary is not None:
-            # Create train and validation arrays
-            # Model parameters
-            model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
-            model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
+if display_summary is not None:
+
+    model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+    model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
 
 
 
