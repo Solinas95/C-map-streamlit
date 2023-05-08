@@ -179,6 +179,8 @@ batch_normalization = st.sidebar.checkbox("Batch normalization")
 build_model_button = st.button("Build Model")
 
 if build_model_button and train_data_file is not None:
+    # Create train and validation arrays
+    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
     input_shape = (X_train.shape[1], X_train.shape[2])
     model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     st.write(model.summary())
