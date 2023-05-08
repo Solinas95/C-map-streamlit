@@ -169,17 +169,17 @@ if create_sequences_button and train_data_file is not None:
     build_model_button = st.button("set_model")
     
 if build_model_button is not None:
-        # Create train and validation arrays
-        # Model parameters
-        num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
-        activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
-        optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
-        weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
-        regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-        regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-        layer_normalization = st.sidebar.checkbox("Layer normalization")
-        batch_normalization = st.sidebar.checkbox("Batch normalization")
-        st.write("model set successfully!")
+    # Create train and validation arrays
+    # Model parameters
+    num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
+    activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
+    optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
+    weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
+    regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+    regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+    layer_normalization = st.sidebar.checkbox("Layer normalization")
+    batch_normalization = st.sidebar.checkbox("Batch normalization")
+    st.write("model set successfully!")
     # Build and display the model
     display_summary = st.button("build_model")
     
