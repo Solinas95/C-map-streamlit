@@ -169,7 +169,7 @@ if create_sequences_button and train_data_file is not None:
 # Build and display the model
 build_model_button = st.button("Build Model")
 
-if build_model_button and X_train is not None:
+if build_model_button  is not None:
     # Create train and validation arrays
     X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
     # Model parameters
