@@ -133,8 +133,18 @@ def build_lstm_model(input_shape, num_lstm_layers, activation_function, optimize
 
     return model
 
+def train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size):
+    early_stop = EarlyStopping(monitor='val_loss', patience=10)
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=batch_size, callbacks=[early_stop])
 
+    # Save the MAE
+    mae = history.history['mae']
+    val_mae = history.history['val_mae']
+    
+    # Generate predictions on the validation data
+    y_pred = model.predict(X_val).flatten()
 
+    return mae, val_mae, y_pred
 
 # Add this line after your existing file uploader widgets
 create_sequences_button = st.button("Create Sequences and Labels")
@@ -186,8 +196,37 @@ if build_model_button is not None:
     print("model bult successfully!")
 
 
+# Add a button for training the model
+train_model_button = st.button("Train Model")
 
-      
+if train_model_button:
+    epochs = st.number_input("Number of Epochs", min_value=1, max_value=1000, value=10, step=1)
+    batch_size = st.number_input("Batch Size", min_value=1, max_value=1000, value=32, step=1)
+    mae, val_mae, y_pred = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
+
+    # Display the MAE
+    st.write("Training MAE:")
+    st.write(mae[-1])
+    st.write("Validation MAE:")
+    st.write(val_mae[-1])
+
+    # Display the plot of validation predictions versus real RUL values
+    fig, ax = plt.subplots()
+    ax.scatter(y_val, y_pred)
+    ax.plot([y_val.min(), y_val.max()], [y_val.min(), y_val.max()], 'k--', lw=4)
+    ax.set_xlabel('Real RUL')
+    ax.set_ylabel('Predicted RUL')
+    st.pyplot(fig)
+This function takes in the model, training and validation data, and the number of epochs and batch size as inputs. It uses early stopping to prevent overfitting. The train_model_button triggers the model training and displays the final training and validation MAE, as well as a scatter plot comparing the real and predicted RUL values.
+
+Please note that you'll need to have a trained model before you can use this function. The model is created when the "set_model" button is clicked in your code.
+
+
+
+
+
+
+
 
 
 
