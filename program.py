@@ -113,7 +113,7 @@ if create_sequences_button and train_data_file is not None:
     # Add a button to show the standard deviation for the selected unit_id
     show_std_button = st.button("Show Standard Deviation")
     
-     if show_std_button:
+    if show_std_button:
         std_df = calculate_std(X, selected_unit_id, seq_length)
         st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
 
