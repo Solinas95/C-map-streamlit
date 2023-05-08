@@ -7,6 +7,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 st.title("CMAPSS Data Preprocessing")
 st.write("Please upload your train, test and RUL data in txt format.")
