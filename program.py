@@ -171,7 +171,6 @@ build_model_button = st.button("Build Model")
 
 if build_model_button  is not None:
     # Create train and validation arrays
-    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
     # Model parameters
     num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
     activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
