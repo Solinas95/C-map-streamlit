@@ -179,8 +179,6 @@ if build_model_button is not None:
         regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
         layer_normalization = st.sidebar.checkbox("Layer normalization")
         batch_normalization = st.sidebar.checkbox("Batch normalization")
-
-        input_shape = (X_train.shape[0], X_train.shape[1])
         st.write("model set successfully!")
 # Build and display the model
 display_summary = st.button("build_model")
