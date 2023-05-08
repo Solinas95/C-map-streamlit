@@ -189,6 +189,7 @@ if create_sequences_button and train_data_file is not None:
             # Create train and validation arrays
             # Model parameters
             model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+            model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
             st.write(model.summary())
 
 
