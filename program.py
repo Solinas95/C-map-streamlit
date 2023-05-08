@@ -165,8 +165,8 @@ if create_sequences_button and train_data_file is not None:
     
     
     
-    # Build and display the model
-    build_model_button = st.button("set_model")
+# Build and display the model
+build_model_button = st.button("set_model")
     
 if build_model_button is not None:
     # Create train and validation arrays
@@ -181,13 +181,14 @@ if build_model_button is not None:
     batch_normalization = st.sidebar.checkbox("Batch normalization")
     st.write("model set successfully!")
     # Build and display the model
-    display_summary = st.button("build_model")
+display_summary = st.button("build_model")
     
 if display_summary is not None:
 
     model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
     st.write("model bult successfully!")
+    
 
       
 
