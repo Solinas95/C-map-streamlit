@@ -109,24 +109,6 @@ def create_train_val_arrays(X, y, train_indices, val_indices):
     
     return np.array(X_train), np.array(y_train), np.array(X_val), np.array(y_val)
 
-# Add this after you create the sequences and labels
-if create_sequences_button and train_data_file is not None:
-    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
-    
-    # Split the sequences into train and validation sets
-    train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
-    
-    # Create train and validation arrays
-    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
-    
-    st.write("Train sequences:")
-    st.write(X_train.shape)
-    st.write("Train labels:")
-    st.write(y_train.shape)
-    st.write("Validation sequences:")
-    st.write(X_val.shape)
-    st.write("Validation labels:")
-    st.write(y_val.shape)
 
 
 # Add this line after your existing file uploader widgets
@@ -135,9 +117,7 @@ create_sequences_button = st.button("Create Sequences and Labels")
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
     
-# Add a selectbox for the user to choose the unit_id
-unique_unit_ids = train_data["unit_id"].unique()
-selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
+
 
 # Add this after you create the sequences and labels
 if create_sequences_button and train_data_file is not None:
