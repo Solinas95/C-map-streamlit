@@ -135,13 +135,6 @@ def build_lstm_model(input_shape, num_lstm_layers, activation_function, optimize
 
 
 
-def train_and_evaluate_model(model, X_train, y_train, X_val, y_val, epochs=100, batch_size=64):
-    early_stopping = EarlyStopping(monitor='val_loss', patience=10)
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=batch_size, callbacks=[early_stopping])
-
-    mae = int(history.history['val_mae'][-1])
-
-    return mae
 
 # Add this line after your existing file uploader widgets
 create_sequences_button = st.button("Create Sequences and Labels")
@@ -191,9 +184,8 @@ if build_model_button is not None:
     # Build and display the model
     model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     print("model bult successfully!")
-    # Train the model and evaluate MAE
-    mae = train_and_evaluate_model(model, X_train, y_train, X_val, y_val)
-    st.write(f"Mean Absolute Error on Validation Data: {mae}")
+
+
 
       
 
