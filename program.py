@@ -135,9 +135,9 @@ create_sequences_button = st.button("Create Sequences and Labels")
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
     
-    # Add a selectbox for the user to choose the unit_id
-    unique_unit_ids = train_data["unit_id"].unique()
-    selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
+# Add a selectbox for the user to choose the unit_id
+unique_unit_ids = train_data["unit_id"].unique()
+selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
 
 # Add this after you create the sequences and labels
 if create_sequences_button and train_data_file is not None:
