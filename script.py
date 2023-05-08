@@ -152,44 +152,33 @@ def train_and_evaluate_model(model, X_train, y_train, X_val, y_val, epochs=10, b
 
 
 
-# Add this line after your existing file uploader widgets
-create_sequences_button = st.button("Create Sequences and Labels")
-# Add the slider for sequence length selection after the file uploader widgets
+# Add the file uploader widget
+train_data_file = st.file_uploader("Upload Train Data", type=["csv"])
+
+# Add the slider for sequence length selection
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
+# Create placeholders for the model and metrics
+model = None
+mae = None
 
-# Add this after you create the sequences and labels
-if create_sequences_button and train_data_file is not None:
+# Add a button for processing the data and training the model
+process_data_button = st.button("Process Data and Train Model")
+
+if process_data_button and train_data_file is not None:
+    # Load the training data
+    train_data = pd.read_csv(train_data_file)
+
+    # Create sequences and labels
     X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
-    
 
-    # Add a selectbox for the user to choose the unit_id
-    unique_unit_ids = train_data["unit_id"].unique()
     # Split the sequences into train and validation sets
+    unique_unit_ids = train_data["unit_id"].unique()
     train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
-    
-    
 
     # Create train and validation arrays
     X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
 
-    
-    st.write("Train sequences:")
-    st.write(X_train.shape)
-    st.write("Train labels:")
-    st.write(y_train.shape)
-    st.write("Validation sequences:")
-    st.write(X_val.shape)
-    st.write("Validation labels:")
-    st.write(y_val.shape)
-    
-    
-
-# Build and display the model
-build_model_button = st.button("set_model")
-    
-if build_model_button is not None:
-    # Create train and validation arrays
     # Model parameters
     num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
     activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
@@ -199,31 +188,15 @@ if build_model_button is not None:
     regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
     layer_normalization = st.sidebar.checkbox("Layer normalization")
     batch_normalization = st.sidebar.checkbox("Batch normalization")
-    print("model set successfully!")
-    # Build and display the model
+
+    # Build the model
     model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
-    print("model bult successfully!")
 
-
-
-# Add a button for training the model
-train_model_button = st.button("Train Model")
-
-if train_model_button:
+    # Train the model
     epochs = st.number_input("Number of Epochs", min_value=1, max_value=1000, value=10, step=1)
     batch_size = st.number_input("Batch Size", min_value=1, max_value=1000, value=32, step=1)
-    mae, state_3.val_mae, y_pred = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
+    mae, _, _ = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
 
     # Display the MAE
-    st.write("Training MAE:")
+    st.write("Final MAE:")
     st.write(mae[-1])
-    st.write("Validation MAE:")
-    st.write(val_mae[-1])
-
-    # Display the plot of validation predictions versus real RUL values
-    fig, ax = plt.subplots()
-    ax.scatter(y_val, y_pred)
-    ax.plot([y_val.min(), y_val.max()], [y_val.min(), y_val.max()], 'k--', lw=4)
-    ax.set_xlabel('Real RUL')
-    ax.set_ylabel('Predicted RUL')
-    st.pyplot(fig)
