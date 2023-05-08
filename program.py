@@ -179,7 +179,7 @@ if build_model_button is not None:
     regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
     layer_normalization = st.sidebar.checkbox("Layer normalization")
     batch_normalization = st.sidebar.checkbox("Batch normalization")
-    st.write("model set successfully!")
+    print("model set successfully!")
     # Build and display the model
 display_summary = st.button("build_model")
     
@@ -187,8 +187,8 @@ if display_summary is not None:
 
     model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
-    st.write("model bult successfully!")
-    
+    print("model bult successfully!")
+    st.write(model.summary())
 
       
 
