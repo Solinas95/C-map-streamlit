@@ -170,26 +170,26 @@ if create_sequences_button and train_data_file is not None:
     
     if build_model_button is not None:
         # Create train and validation arrays
-    # Model parameters
-    num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
-    activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
-    optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
-    weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
-    regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    layer_normalization = st.sidebar.checkbox("Layer normalization")
-    batch_normalization = st.sidebar.checkbox("Batch normalization")
+        # Model parameters
+        num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
+        activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
+        optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
+        weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
+        regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+        regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+        layer_normalization = st.sidebar.checkbox("Layer normalization")
+        batch_normalization = st.sidebar.checkbox("Batch normalization")
 
-    input_shape = (X_train.shape[0], X_train.shape[1])
+        input_shape = (X_train.shape[0], X_train.shape[1])
     
-    # Build and display the model
-    build_model_button = st.button("Build Model")
+        # Build and display the model
+        display_summary = st.button("display summary ")
     
-    if build_model_button is not None:
-        # Create train and validation arrays
-    # Model parameters
-        model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
-        st.write(model.summary())
+        if build_model_button is not None:
+            # Create train and validation arrays
+            # Model parameters
+            model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+            st.write(model.summary())
 
 
       
