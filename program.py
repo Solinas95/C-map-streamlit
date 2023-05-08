@@ -181,12 +181,7 @@ if build_model_button is not None:
     batch_normalization = st.sidebar.checkbox("Batch normalization")
     print("model set successfully!")
     # Build and display the model
-display_summary = st.button("build_model")
-    
-if display_summary is not None:
-
     model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
-    model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
     print("model bult successfully!")
  
 
