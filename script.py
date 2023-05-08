@@ -164,7 +164,7 @@ mae = None
 # Add a button for processing the data and training the model
 process_data_button = st.button("Process Data and Train Model")
 
-process_data_button = st.button("Process Data and Train Model")
+
 
 if process_data_button:
     if train_data_file is not None:
