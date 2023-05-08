@@ -152,8 +152,7 @@ def train_and_evaluate_model(model, X_train, y_train, X_val, y_val, epochs=10, b
 
 
 
-# Add the file uploader widget
-train_data_file = st.file_uploader("Upload Train Data", type=["csv"])
+
 
 # Add the slider for sequence length selection
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
