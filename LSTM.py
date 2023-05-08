@@ -120,25 +120,23 @@ def create_train_val_arrays(X, y, train_indices, val_indices):
     
     return np.array(X_train), np.array(y_train), np.array(X_val), np.array(y_val)
 
-def build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization):
+def build_lstm_model(sequence_length, nb_features, nb_out):
     model = Sequential()
-    regularizer = L1L2(l1=regularization_l1, l2=regularization_l2)
-
-    for i in range(num_lstm_layers):
-        return_sequences = i != num_lstm_layers - 1
-        model.add(LSTM(units=50, activation=activation_function, kernel_initializer=weight_initializer, kernel_regularizer=regularizer, return_sequences=return_sequences))
-
-        if layer_normalization:
-            model.add(LayerNormalization())
-
-        if batch_normalization:
-            model.add(BatchNormalization())
-
-    model.add(Dense(1))
-
-    model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
-
+    model.add(LSTM(
+             input_shape=(sequence_length, nb_features),
+             units=100,
+             return_sequences=False))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=30))
+    model.add(Activation("relu"))
+    model.add(Dropout(0.1))
+    model.add(Dense(units=20))
+    model.add(Activation("relu"))
+    model.add(Dense(units=nb_out))
+    model.add(Activation("linear"))
+    model.compile(loss='mean_squared_error', optimizer='nadam', metrics=['mae', r2_keras])
     return model
+
 
 
 # Add this line after your existing file uploader widgets
@@ -149,7 +147,7 @@ seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, val
 
 # Add this after you create the sequences and labels
 if create_sequences_button and train_data_file is not None:
-    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
+    X, y, unit_id_to_indices = create_X_y(test_data, seq_length)
     
 
     # Add a selectbox for the user to choose the unit_id
@@ -175,21 +173,16 @@ if create_sequences_button and train_data_file is not None:
 build_model_button = st.button("set_model")
     
 if build_model_button is not None:
-    # Create train and validation arrays
-    # Model parameters
-    num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
-    activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
-    optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
-    weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
-    regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    layer_normalization = st.sidebar.checkbox("Layer normalization")
-    batch_normalization = st.sidebar.checkbox("Batch normalization")
-    print("model set successfully!")
-    # Build and display the model
-    model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
-    print("model bult successfully!")
- 
+    nb_features = 28
+    nb_out = 1
+
+    # Build the LSTM model
+    model = build_lstm_model(sequence_length, nb_features, nb_out)
+    model.load_model('lstm_model')
+
+    #Caching the model for faster loading
+    @st.cache
+    st.write("model created")
 
       
 
