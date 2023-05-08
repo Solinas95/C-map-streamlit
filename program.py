@@ -159,6 +159,6 @@ if create_sequences_button and train_data_file is not None:
     st.write(y_val.shape)
 
       
-    # Add a selectbox for the user to choose the unit_id
-    unique_unit_ids = train_data["unit_id"].unique()
-    selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
+# Add a selectbox for the user to choose the unit_id
+unique_unit_ids = train_data["unit_id"].unique()
+selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
