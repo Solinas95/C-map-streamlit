@@ -164,38 +164,44 @@ mae = None
 # Add a button for processing the data and training the model
 process_data_button = st.button("Process Data and Train Model")
 
-if process_data_button and train_data_file is not None:
-    # Load the training data
-    train_data = pd.read_csv(train_data_file)
+process_data_button = st.button("Process Data and Train Model")
 
-    # Create sequences and labels
-    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
+if process_data_button:
+    if train_data_file is not None:
+        # Load the training data
+        train_data = pd.read_csv(train_data_file)
 
-    # Split the sequences into train and validation sets
-    unique_unit_ids = train_data["unit_id"].unique()
-    train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
+        # Create sequences and labels
+        X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
 
-    # Create train and validation arrays
-    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
+        # Split the sequences into train and validation sets
+        unique_unit_ids = train_data["unit_id"].unique()
+        train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
 
-    # Model parameters
-    num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
-    activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
-    optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
-    weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
-    regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    layer_normalization = st.sidebar.checkbox("Layer normalization")
-    batch_normalization = st.sidebar.checkbox("Batch normalization")
+        # Create train and validation arrays
+        X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
 
-    # Build the model
-    model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+        # Model parameters
+        num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
+        activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
+        optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
+        weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
+        regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+        regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+        layer_normalization = st.sidebar.checkbox("Layer normalization")
+        batch_normalization = st.sidebar.checkbox("Batch normalization")
 
-    # Train the model
-    epochs = st.number_input("Number of Epochs", min_value=1, max_value=1000, value=10, step=1)
-    batch_size = st.number_input("Batch Size", min_value=1, max_value=1000, value=32, step=1)
-    mae, _, _ = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
+        # Build the model
+        model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
 
-    # Display the MAE
-    st.write("Final MAE:")
-    st.write(mae[-1])
+        # Train the model
+        epochs = st.number_input("Number of Epochs", min_value=1, max_value=1000, value=10, step=1)
+        batch_size = st.number_input("Batch Size", min_value=1, max_value=1000, value=32, step=1)
+        mae, _, _ = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
+
+        # Display the MAE
+        st.write("Final MAE:")
+        st.write(mae[-1])
+    else:
+        st.warning("Please upload a CSV file for training data.")
+
