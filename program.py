@@ -116,7 +116,7 @@ if create_sequences_button and train_data_file is not None:
     show_std_button = st.button("Show Standard Deviation")
     
     if show_std_button:
-        std_df = calculate_std(X, selected_unit_id, seq_length)
+        std_df = calculate_std(X, selected_unit_id, seq_length,unit_id_to_indices)
         st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
 
         # Create a bar plot using matplotlib
