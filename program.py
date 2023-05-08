@@ -181,7 +181,7 @@ if build_model_button  is not None:
     layer_normalization = st.sidebar.checkbox("Layer normalization")
     batch_normalization = st.sidebar.checkbox("Batch normalization")
 
-    input_shape = (X_train.shape[1], X_train.shape[2])
+    input_shape = (X_train.shape[0], X_train.shape[1])
     model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     st.write(model.summary())
 
