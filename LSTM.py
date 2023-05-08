@@ -180,10 +180,3 @@ if build_model_button is not None:
     model = build_lstm_model(sequence_length, nb_features, nb_out)
     model.load_model('lstm_model')
     model.summary()
-
-    #Caching the model for faster loading
-    @st.cache
-
-
-
-
