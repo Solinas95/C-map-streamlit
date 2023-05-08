@@ -165,8 +165,8 @@ if create_sequences_button and train_data_file is not None:
     
     
     
-# Build and display the model
-build_model_button = st.button("set_model")
+    # Build and display the model
+    build_model_button = st.button("set_model")
     
 if build_model_button is not None:
         # Create train and validation arrays
@@ -180,8 +180,8 @@ if build_model_button is not None:
         layer_normalization = st.sidebar.checkbox("Layer normalization")
         batch_normalization = st.sidebar.checkbox("Batch normalization")
         st.write("model set successfully!")
-# Build and display the model
-display_summary = st.button("build_model")
+    # Build and display the model
+    display_summary = st.button("build_model")
     
 if display_summary is not None:
 
