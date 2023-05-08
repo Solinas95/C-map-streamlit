@@ -91,12 +91,42 @@ def create_X_y(data, seq_length):
         unit_id_to_indices[unit_id] = unit_indices
 
     return X, y, unit_id_to_indices
+from sklearn.model_selection import train_test_split
 
-def calculate_std(X, unit_id, seq_length, unit_id_to_indices):
-    unit_indices = unit_id_to_indices[unit_id]
-    unit_X = [X[i] for i in unit_indices]
-    std_df = pd.DataFrame(np.vstack(unit_X)).std(axis=0)
-    return std_df
+def train_val_split(unit_ids, unit_id_to_indices, test_size=0.2, random_state=42):
+    train_unit_ids, val_unit_ids = train_test_split(unit_ids, test_size=test_size, random_state=random_state)
+    
+    train_indices = [idx for unit_id in train_unit_ids for idx in unit_id_to_indices[unit_id]]
+    val_indices = [idx for unit_id in val_unit_ids for idx in unit_id_to_indices[unit_id]]
+    
+    return train_indices, val_indices
+
+def create_train_val_arrays(X, y, train_indices, val_indices):
+    X_train = [X[i] for i in train_indices]
+    y_train = [y[i] for i in train_indices]
+    X_val = [X[i] for i in val_indices]
+    y_val = [y[i] for i in val_indices]
+    
+    return np.array(X_train), np.array(y_train), np.array(X_val), np.array(y_val)
+
+# Add this after you create the sequences and labels
+if create_sequences_button and train_data_file is not None:
+    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
+    
+    # Split the sequences into train and validation sets
+    train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
+    
+    # Create train and validation arrays
+    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
+    
+    st.write("Train sequences:")
+    st.write(X_train.shape)
+    st.write("Train labels:")
+    st.write(y_train.shape)
+    st.write("Validation sequences:")
+    st.write(X_val.shape)
+    st.write("Validation labels:")
+    st.write(y_val.shape)
 
 
 # Add this line after your existing file uploader widgets
@@ -104,19 +134,31 @@ create_sequences_button = st.button("Create Sequences and Labels")
 # Add the slider for sequence length selection after the file uploader widgets
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
-if create_sequences_button and train_data_file is not None:
-    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
-    st.write("Sequences and labels are created.")
     
     # Add a selectbox for the user to choose the unit_id
     unique_unit_ids = train_data["unit_id"].unique()
     selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
 
-    # Add a button to show the standard deviation for the selected unit_id
-    show_std_button = st.button("Show Standard Deviation")
+# Add this after you create the sequences and labels
+if create_sequences_button and train_data_file is not None:
+    X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
     
-    if show_std_button:
-        std_df = calculate_std(X, selected_unit_id, seq_length,unit_id_to_indices)
-        st.write(f"Standard deviation for each column in sequences of Unit ID {selected_unit_id}:")
-        st.wrtie(std_df)
+    # Split the sequences into train and validation sets
+    train_indices, val_indices = train_val_split(unique_unit_ids, unit_id_to_indices)
+    
+    # Create train and validation arrays
+    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
+    
+    st.write("Train sequences:")
+    st.write(X_train.shape)
+    st.write("Train labels:")
+    st.write(y_train.shape)
+    st.write("Validation sequences:")
+    st.write(X_val.shape)
+    st.write("Validation labels:")
+    st.write(y_val.shape)
 
+      
+    # Add a selectbox for the user to choose the unit_id
+    unique_unit_ids = train_data["unit_id"].unique()
+    selected_unit_id = st.selectbox("Select Unit ID", unique_unit_ids)
