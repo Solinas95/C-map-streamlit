@@ -8,6 +8,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout, BatchNormalization, LayerNormalization
+from tensorflow.keras.regularizers import L1, L2, L1L2
+
+
 
 
 st.title("CMAPSS Data Preprocessing")
@@ -109,6 +114,25 @@ def create_train_val_arrays(X, y, train_indices, val_indices):
     
     return np.array(X_train), np.array(y_train), np.array(X_val), np.array(y_val)
 
+def build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization):
+    model = Sequential()
+    regularizer = L1L2(l1=regularization_l1, l2=regularization_l2)
+
+    for i in range(num_lstm_layers):
+        return_sequences = i != num_lstm_layers - 1
+        model.add(LSTM(units=50, activation=activation_function, kernel_initializer=weight_initializer, kernel_regularizer=regularizer, return_sequences=return_sequences))
+
+        if layer_normalization:
+            model.add(LayerNormalization())
+
+        if batch_normalization:
+            model.add(BatchNormalization())
+
+    model.add(Dense(1))
+
+    model.compile(loss="mean_squared_error", optimizer=optimizer, metrics=["mae"])
+
+    return model
 
 
 # Add this line after your existing file uploader widgets
@@ -140,4 +164,22 @@ if create_sequences_button and train_data_file is not None:
     st.write(y_val.shape)
 
       
+
+# Model parameters
+num_lstm_layers = st.sidebar.slider("Number of LSTM layers", min_value=1, max_value=2, value=1, step=1)
+activation_function = st.sidebar.selectbox("Activation function", options=["tanh", "relu"])
+optimizer = st.sidebar.selectbox("Optimizer", options=["RMSprop", "adam"])
+weight_initializer = st.sidebar.selectbox("Weight initializer", options=["glorot_uniform", "he_uniform"])
+regularization_l1 = st.sidebar.number_input("L1 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+regularization_l2 = st.sidebar.number_input("L2 regularization", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
+layer_normalization = st.sidebar.checkbox("Layer normalization")
+batch_normalization = st.sidebar.checkbox("Batch normalization")
+
+# Build and display the model
+build_model_button = st.button("Build Model")
+
+if build_model_button and train_data_file is not None:
+    input_shape = (X_train.shape[1], X_train.shape[2])
+    model = build_lstm_model(input_shape, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+    st.write(model.summary())
 
