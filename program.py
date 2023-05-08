@@ -150,7 +150,7 @@ create_sequences_button = st.button("Create Sequences and Labels")
 # Add the slider for sequence length selection after the file uploader widgets
 seq_length = st.slider("Select Sequence Length", min_value=1, max_value=100, value=50, step=1)
 
-state_1 = SessionState.get(X_train=None, y_train=None, X_val=None, y_val=None)
+
 # Add this after you create the sequences and labels
 if create_sequences_button and train_data_file is not None:
     X, y, unit_id_to_indices = create_X_y(train_data, seq_length)
@@ -164,7 +164,7 @@ if create_sequences_button and train_data_file is not None:
     
 
     # Create train and validation arrays
-    state_1.X_train, state_1.y_train, state_1.X_val, state_1.y_val = create_train_val_arrays(X, y, train_indices, val_indices)
+    X_train, y_train, X_val, y_val = create_train_val_arrays(X, y, train_indices, val_indices)
 
     
     st.write("Train sequences:")
@@ -177,7 +177,7 @@ if create_sequences_button and train_data_file is not None:
     st.write(y_val.shape)
     
     
-state_2 = SessionState.get(model=None)
+
 # Build and display the model
 build_model_button = st.button("set_model")
     
@@ -194,18 +194,18 @@ if build_model_button is not None:
     batch_normalization = st.sidebar.checkbox("Batch normalization")
     print("model set successfully!")
     # Build and display the model
-    state_2.model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
+    model = build_lstm_model(28, num_lstm_layers, activation_function, optimizer, weight_initializer, regularization_l1, regularization_l2, layer_normalization, batch_normalization)
     print("model bult successfully!")
 
 
 
 # Add a button for training the model
 train_model_button = st.button("Train Model")
-state_3 = SessionState.get(mae=None ,val_mae=None , y_pred=None)
+
 if train_model_button:
     epochs = st.number_input("Number of Epochs", min_value=1, max_value=1000, value=10, step=1)
     batch_size = st.number_input("Batch Size", min_value=1, max_value=1000, value=32, step=1)
-    state_3.mae, state_3.val_mae, state_3.y_pred = train_model(state_2.model, state_1.X_train, state_1.y_train, state_1.X_val, state_1.y_val, epochs, batch_size)
+    mae, state_3.val_mae, y_pred = train_model(model, X_train, y_train, X_val, y_val, epochs, batch_size)
 
     # Display the MAE
     st.write("Training MAE:")
