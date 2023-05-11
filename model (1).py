@@ -41,7 +41,7 @@ def run():
             st.sidebar.write("No model loaded")
 
     # Upload the dataset
-    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+    uploaded_file = st.file_uploader("Choose a CSV file", type="txt")
     if uploaded_file is not None:
         input_df = pd.read_csv(uploaded_file)
         st.write(input_df)
